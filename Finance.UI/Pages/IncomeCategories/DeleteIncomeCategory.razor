@@ -1,0 +1,65 @@
+﻿@page "/incomes/categories/delete/{Id:int}"
+@using Finance.Core.Entities;
+@using Finance.UI.Interfaces;
+@inject IRequestApi<Income> IncomesService
+@inject IRequestApi<IncomeCategory> IncomeCategoriesService
+@inject NavigationManager NavigationManager
+
+<h3>@_title</h3>
+
+<div class="form-group">
+    <table class="table table-striped table-bordered">
+        <tbody>
+            <tr>
+                <td style="width:10%">Id</td>
+                <td>@_incomeCategory.Id</td>
+            </tr>
+            <tr>
+                <td style="width:10%">Date</td>
+                <td>@_incomeCategory.Name</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="form-group">
+    <input type="submit" value="Delete" disabled = "@_nonRemovable" @onclick="(async () => await Remove())" class="btn btn-danger" />
+    <input type="submit" value="Cancel" @onclick="(() => Cancel())" class="btn btn-warning" />
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private string _title = string.Empty;
+    private bool _nonRemovable = true;
+    private IncomeCategory? _incomeCategory = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _incomeCategory = await IncomeCategoriesService.Find(Id);
+        var incomes = await IncomesService.GetAll();
+        var result = incomes.Where(i => i.IncomeCategoryId == _incomeCategory.Id).FirstOrDefault();
+        if (result == null)
+        {
+            _nonRemovable = false;
+            _title = "Do you want to delete this?";
+        }
+        else
+        {
+            _title = "Unable to delete";
+        }
+    }
+
+    private async Task Remove()
+    {
+        if(!_nonRemovable)
+        {
+            await IncomeCategoriesService.Remove(Id);
+        }
+        Cancel();
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/incomes/categories");
+    }
+}

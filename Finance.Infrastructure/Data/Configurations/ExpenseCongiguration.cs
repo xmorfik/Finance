@@ -8,6 +8,6 @@ public class ExpenseCongiguration : IEntityTypeConfiguration<Expense>
 {
     public void Configure(EntityTypeBuilder<Expense> builder)
     {
-        builder.HasOne(e => e.ExpenseCategory).WithMany(c=>c.Expenses).OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(e => e.ExpenseCategory).WithMany(c => c.Expenses).OnDelete(DeleteBehavior.Restrict);
     }
 }

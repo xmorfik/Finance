@@ -1,5 +1,4 @@
-using Finance.WebApi.Configurations;
-using Microsoft.AspNetCore.Diagnostics;
+using Finance.WebApi.Extentions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,25 +14,20 @@ builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
-app.UseExceptionHandler(c => c.Run(async context =>
-{
-    var exception = context.Features
-        .Get<IExceptionHandlerFeature>()
-        ?.Error;
-    if (exception is not null)
-    {
-        var response = new { error = exception.Message };
-        context.Response.StatusCode = 400;
-
-        await context.Response.WriteAsJsonAsync(response);
-    }
-}));
-
+app.UseHttpsRedirection();
+app.UseExceptionHandler();
 app.UseStatusCodePages();
+
+//using (var scope = app.Services.CreateScope())
+//{
+//    var context = scope.ServiceProvider.GetRequiredService<FinanceDbContext>();
+//    context.Database.EnsureCreated();
+//}
 
 var apis = app.Services.GetServices<IApi>();
 
-app.MapGet("/", () => Results.Redirect("/swagger"));
+app.MapGet("/", () => Results.Ok());
+app.MapGet("/api/v1", () => Results.Ok());
 
 foreach (var api in apis)
 {

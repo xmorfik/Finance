@@ -40,7 +40,7 @@ public class ExpensesService : IExpensesService
     {
         var expense = await _expensesRepository.GetByIdAsync(id);
 
-        if(expense == null)
+        if (expense == null)
         {
             throw new NotFoundException();
         }

@@ -11,7 +11,7 @@ public class ExpensePeriodReportSpecification : Specification<Expense>
         var endDateTime = end.ToDateTime(TimeOnly.MinValue);
 
         Query.Where(
-            e => e.DateTime.Date.CompareTo(startDateTime) >= 0 
+            e => e.DateTime.Date.CompareTo(startDateTime) >= 0
             && e.DateTime.Date.CompareTo(endDateTime) <= 0);
     }
 }

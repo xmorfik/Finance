@@ -31,7 +31,7 @@ public class IncomesService : IIncomesService
         return await _incomesRepository.ListAsync();
     }
 
-    public async ValueTask <Income?> Find(int id)
+    public async ValueTask<Income?> Find(int id)
     {
         return await _incomesRepository.GetByIdAsync(id);
     }
@@ -40,7 +40,7 @@ public class IncomesService : IIncomesService
     {
         var income = await _incomesRepository.GetByIdAsync(id);
 
-        if(income == null)
+        if (income == null)
         {
             throw new NotFoundException();
         }

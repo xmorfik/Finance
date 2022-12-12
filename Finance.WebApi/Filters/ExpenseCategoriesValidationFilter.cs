@@ -2,7 +2,7 @@
 
 namespace Finance.WebApi.Filters;
 
-public class ExpenseCategoriesValidationFilter:IEndpointFilter
+public class ExpenseCategoriesValidationFilter : IEndpointFilter
 {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
@@ -10,7 +10,7 @@ public class ExpenseCategoriesValidationFilter:IEndpointFilter
 
         if (expenseCategory == null
         || expenseCategory.Name == null
-        || expenseCategory.Name.Length == 0 
+        || expenseCategory.Name.Length == 0
         || expenseCategory.Name.Length > 50)
         {
             return Results.BadRequest();

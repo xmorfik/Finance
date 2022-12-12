@@ -1,0 +1,24 @@
+﻿@page "/"
+@using Finance.Services.Interfaces;
+@using Finance.Core.Entities;
+@inject IReportService ReportService 
+
+<PageTitle>Finance</PageTitle>
+
+<div class="row">
+    <div class="col">
+        <a style="height:100%;width:100%" href='/incomes' class="btn btn-success" role="button">Incomes</a>
+    </div>
+    <div class="col">
+        <a style="height:100%;width:100%" href='/expenses' class="btn btn-danger" role="button">Expenses</a>
+    </div>
+
+</div>
+<br/>
+<div class="col">
+    <a style="height:100%;width:100%" href='/reports' class="btn btn-warning" role="button">Reports</a>
+</div>
+
+@code {
+}
+

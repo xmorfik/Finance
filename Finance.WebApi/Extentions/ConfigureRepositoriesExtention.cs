@@ -1,7 +1,7 @@
 ﻿using Finance.Repositories;
 using Finance.Repositories.Interfaces;
 
-namespace Finance.WebApi.Configurations;
+namespace Finance.WebApi.Extentions;
 
 public static class ConfigureRepositoryExtention
 {

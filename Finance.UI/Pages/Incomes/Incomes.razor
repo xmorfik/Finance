@@ -1,0 +1,61 @@
+﻿@page "/incomes"
+@using Finance.Core.Entities;
+@using Finance.UI.Interfaces;
+@inject IRequestApi<Income> IncomesService
+@inject IRequestApi<IncomeCategory> IncomeCategoriesService
+
+<PageTitle>Incomes</PageTitle>
+
+<h1>Incomes</h1>
+
+@if (_incomes == null || _incomeCategories == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col">
+            <a style="height:100%;width:100%" href='/incomes/add' class="btn btn-success" role="button">Add</a>
+        </div>
+        <div class="col">
+            <a style="height:100%;width:100%" href='/incomes/categories' class="btn btn-info" role="button">Caregories</a>
+        </div>
+    </div>
+    <br/>
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th style="width:10%">Date</th>
+                <th style="width:70%">Amount</th>
+                <th style="width:10%">Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var income in _incomes)
+            {
+            <tr>
+                <td>@income.DateTime.ToShortDateString()</td>
+                <td>@income.Amount</td>
+                <td>@_incomeCategories.Where(ic => ic.Id == income.IncomeCategoryId).FirstOrDefault().Name</td>
+                <td>
+                    <a href='/incomes/edit/@income.Id' class="btn btn-warning" role="button">Edit</a>
+                    <a href='/incomes/delete/@income.Id' class="btn btn-danger" role="button">Delete</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code 
+{
+    private ICollection<Income>? _incomes;
+    private ICollection<IncomeCategory>? _incomeCategories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _incomes = await IncomesService.GetAll();
+        _incomeCategories = await IncomeCategoriesService.GetAll();
+    }
+}

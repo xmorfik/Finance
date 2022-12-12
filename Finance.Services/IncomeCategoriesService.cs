@@ -15,7 +15,7 @@ public class IncomeCategoriesService : IIncomeCategoriesService
         IRepository<IncomeCategory> incomeCategoriesRepository,
         IRepository<Income> incomesRepository)
     {
-        _incomesRepository= incomesRepository;
+        _incomesRepository = incomesRepository;
         _incomeCategoriesRepository = incomeCategoriesRepository;
     }
 
@@ -50,7 +50,7 @@ public class IncomeCategoriesService : IIncomeCategoriesService
 
         var incomes = await _incomesRepository.ListAsync(new IncomeByCategoryId((int)incomeCategory.Id));
 
-        if(incomes.Count > 0)
+        if (incomes.Count > 0)
         {
             throw new LinkToAnotherTableException("Link to another table");
         }

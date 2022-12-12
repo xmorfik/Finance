@@ -1,0 +1,127 @@
+﻿@page "/reports"
+@using Finance.Core.Entities;
+@using Finance.Services.Interfaces;
+@inject IReportService ReportsService
+
+<div class="row">
+    <div class="col">
+        <InputCheckbox type="checkbox" class="btn-check" id="btn-check-outlined" @bind-Value="_isDateRange" />
+        <label style="height:100%;width:100%" class="btn btn-outline-warning" for="btn-check-outlined">Date range</label>
+    </div>
+</div>
+<br />
+
+<div class="row">
+    <div class="col">
+        <InputDate class="form-control" @bind-Value="_dateStart" />
+    </div>
+    @if(_isDateRange)
+    {
+        <div class="col">
+            <InputDate class="form-control" @bind-Value="_dateEnd" />
+        </div>
+    }
+</div>
+<br />
+
+<div class="row">
+    <div class="col">
+        <a style="height:100%;width:100%" @onclick="GetReport" class="btn btn-success" role="button">Get Report</a>
+    </div>
+</div>
+<br />
+
+@if(_report != null)
+{
+    <div class="row">
+        <div class="col">
+            <table class="table align-middle table-bordered">
+                <thead class="table-warning">
+                    <tr>
+                        <th style="width:10%">Total Income</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@_report.TotalIncome</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <table class="table align-middle table-bordered">
+                <thead class="table-warning">
+                    <tr>
+                        <th style="width:10%">Total Expense</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@_report.TotalExpense</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h4>Incomes</h4>
+            <table class="table table-striped align-middle table-bordered">
+                <thead class="table-success">
+                    <tr>
+                        <th style="width:10%">Date</th>
+                        <th style="width:70%">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var income in _report.Incomes)
+                    {
+                        <tr>
+                            <td>@income.DateTime.ToShortDateString()</td>
+                            <td>@income.Amount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <h4>Expenses</h4>
+            <table class="table table-striped align-middle table-bordered">
+                <thead class="table-success">
+                    <tr>
+                        <th style="width:10%">Date</th>
+                        <th style="width:70%">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var expense in _report.Expenses)
+                    {
+                        <tr>
+                            <td>@expense.DateTime.ToShortDateString()</td>
+                            <td>@expense.Amount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@code {
+    private bool _isDateRange;
+    private Report? _report;
+    private DateTime _dateStart = DateTime.Now;
+    private DateTime _dateEnd = DateTime.Now;
+
+    public async Task GetReport()
+    {
+        if (_isDateRange)
+        {
+            _report = await ReportsService.GetPeriodReport(DateOnly.FromDateTime(_dateStart), DateOnly.FromDateTime(_dateEnd));
+        }
+        else
+        {
+            _report = await ReportsService.GetDailyReport(DateOnly.FromDateTime(_dateStart));
+        }
+    }
+}

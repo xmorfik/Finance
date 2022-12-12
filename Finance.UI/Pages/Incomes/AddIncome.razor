@@ -1,0 +1,92 @@
+﻿@page "/incomes/add"
+@page "/incomes/edit/{Id:int}"
+@using Finance.Core.Entities;
+@using Finance.UI.Interfaces;
+@inject IRequestApi<Income> IncomesService
+@inject IRequestApi<IncomeCategory> IncomeCategoriesService
+@inject NavigationManager NavigationManager
+
+<h3>@_title Income</h3>
+
+<EditForm Model="@_income" OnValidSubmit="Save">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label for="DateTime" class="form-label">Date</label>
+        <div class="col-md-4">
+            <InputDate class="form-control" @bind-Value="_income.DateTime " />
+        </div>
+        <ValidationMessage For="@(() => _income.DateTime)" />
+    </div>
+    <div class="mb-3">
+        <label for="Amount" class="form-label">Amount</label>
+        <div class="col-md-4">
+            <InputNumber class="form-control" type="decimal" min="0.01" step="0.01" oninput="validity.valid||(value='');" @bind-Value="_income.Amount"/>
+        </div>
+        <ValidationMessage For="@(() => _income.Amount)" />
+    </div>
+    <div class="mb-3">
+        <label for="Category" class="form-label">Category</label>
+        <div class="col-md-4">
+            <InputSelect class="form-control" @bind-Value="_income.IncomeCategoryId">
+                @if(_incomeCategories != null)
+                {
+                    @foreach (var income in _incomeCategories)
+                    {
+                        <option value="@income.Id">@income.Name</option>
+                    }
+                }
+            </InputSelect>
+        </div>
+        <ValidationMessage For="@(() => _income.IncomeCategoryId)" />
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button class="btn btn-warning" @onclick="Cancel">Cancel</button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private string _title = "Add";
+    private Income? _income = new();
+    private ICollection<IncomeCategory>? _incomeCategories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _incomeCategories = await IncomeCategoriesService.GetAll();
+        if (Id == 0)
+        {
+            _income.Amount = 1M;
+            _income.DateTime = DateTime.Now;
+            _income.IncomeCategoryId = _incomeCategories.ElementAtOrDefault(0)?.Id;
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id != 0)
+        {
+            _title = "Edit";
+            _income = await IncomesService.Find(Id);
+        }
+    }
+
+    private async Task Save()
+    {
+        if (_income?.Id > 0)
+        {
+            await IncomesService.Update(_income);
+        }
+        else if (_income?.Id == null)
+        {
+            await IncomesService.Add(_income);
+        }
+        Cancel();
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/incomes");
+    }
+}

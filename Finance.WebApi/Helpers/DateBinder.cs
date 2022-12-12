@@ -14,7 +14,7 @@ public record DateBinder(DateOnly Date)
             var dateOnly = DateOnly.FromDateTime(dateTime);
             return new DateBinder(dateOnly);
         }
-        catch 
+        catch
         {
             throw new WrongDateFormatException("Wrong date format, expected: dd.MM.yyyy");
         }

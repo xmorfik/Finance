@@ -1,0 +1,61 @@
+﻿@page "/expenses"
+@using Finance.Core.Entities;
+@using Finance.UI.Interfaces;
+@inject IRequestApi<Expense> ExpensesService
+@inject IRequestApi<ExpenseCategory> ExpenseCategoriesService
+
+<PageTitle>Expenses</PageTitle>
+
+<h1>Expenses</h1>
+
+@if (_expenses == null || _expenseCategories == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col">
+            <a style="height:100%;width:100%" href='/expenses/add' class="btn btn-success" role="button">Add</a>
+        </div>
+        <div class="col">
+            <a style="height:100%;width:100%" href='/expenses/categories' class="btn btn-info" role="button">Caregories</a>
+        </div>
+    </div>
+    <br />
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th style="width:10%">Date</th>
+                <th style="width:70%">Amount</th>
+                <th style="width:10%">Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var expense in _expenses)
+            {
+                <tr>
+                    <td>@expense.DateTime.ToShortDateString()</td>
+                    <td>@expense.Amount</td>
+                    <td>@_expenseCategories.Where(ic => ic.Id == expense.ExpenseCategoryId).FirstOrDefault().Name</td>
+                    <td>
+                        <a href='/expenses/edit/@expense.Id' class="btn btn-warning" role="button">Edit</a>
+                        <a href='/expenses/delete/@expense.Id' class="btn btn-danger" role="button">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code
+{
+    private ICollection<Expense>? _expenses;
+    private ICollection<ExpenseCategory>? _expenseCategories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _expenses = await ExpensesService.GetAll();
+        _expenseCategories = await ExpenseCategoriesService.GetAll();
+    }
+}

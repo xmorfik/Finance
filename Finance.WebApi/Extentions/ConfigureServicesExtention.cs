@@ -1,7 +1,7 @@
-﻿using Finance.Services.Interfaces;
-using Finance.Services;
+﻿using Finance.Services;
+using Finance.Services.Interfaces;
 
-namespace Finance.WebApi.Configurations;
+namespace Finance.WebApi.Extentions;
 
 public static class ConfigureServicesExtention
 {

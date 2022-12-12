@@ -4,6 +4,7 @@ namespace Finance.Services.Interfaces;
 
 public interface IReportService
 {
+    public ValueTask<Report?> GetAllReport();
     public ValueTask<Report?> GetDailyReport(DateOnly date);
     public ValueTask<Report?> GetPeriodReport(DateOnly dateStart, DateOnly dateEnd);
 }

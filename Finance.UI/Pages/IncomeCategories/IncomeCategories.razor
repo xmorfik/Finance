@@ -1,0 +1,57 @@
+﻿@page "/incomes/categories"
+@using Finance.Core.Entities;
+@using Finance.UI.Interfaces;
+@inject IRequestApi<Income> IncomesService
+@inject IRequestApi<IncomeCategory> IncomeCategoriesService
+
+<PageTitle>Categories</PageTitle>
+
+<h1>Income Categories</h1>
+
+@if (_incomeCategories == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col">
+            <a style="height:100%;width:100%" href='/incomes/categories/add' class="btn btn-success" role="button">Add</a>
+        </div>
+        <div class="col">
+            <a style="height:100%;width:100%" href='/incomes' class="btn btn-dark" role="button">Back</a>
+        </div>
+    </div>
+    <br />
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th style="width:10%">Id</th>
+                <th style="width:80%">Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var incomeCategory in _incomeCategories)
+            {
+                <tr>
+                    <td>@incomeCategory.Id</td>
+                    <td>@incomeCategory.Name</td>
+                    <td>
+                        <a href='/incomes/categories/edit/@incomeCategory.Id' class="btn btn-warning" role="button">Edit</a>
+                        <a href='/incomes/categories/delete/@incomeCategory.Id' class="btn btn-danger" role="button">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code
+{
+    private ICollection<IncomeCategory>? _incomeCategories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _incomeCategories = await IncomeCategoriesService.GetAll();
+    }
+}

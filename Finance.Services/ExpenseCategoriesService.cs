@@ -42,7 +42,7 @@ public class ExpenseCategoriesService : IExpenseCategoriesService
     public async Task Remove(int id)
     {
         var expenseCategory = await _expenseCategoriesRepository.GetByIdAsync(id);
-       
+
         if (expenseCategory == null || expenseCategory.Id == null)
         {
             throw new NotFoundException();

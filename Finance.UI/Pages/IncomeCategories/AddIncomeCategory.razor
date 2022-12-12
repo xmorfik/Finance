@@ -1,0 +1,65 @@
+﻿@page "/incomes/categories/add"
+@page "/incomes/categories/edit/{Id:int}"
+@using Finance.Core.Entities;
+@using Finance.UI.Interfaces;
+@inject IRequestApi<IncomeCategory> IncomeCategoriesService
+@inject NavigationManager NavigationManager
+
+<h3>@_title Income Category</h3>
+
+<EditForm Model="@_incomeCategory" OnValidSubmit="Save">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label for="DateTime" class="form-label">Name</label>
+        <div class="col-md-4">
+            <InputText class="form-control" @bind-Value="_incomeCategory.Name " />
+        </div>
+        <ValidationMessage For="@(() => _incomeCategory.Name)" />
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button class="btn btn-warning" @onclick="Cancel">Cancel</button>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private string _title = "Add";
+    private IncomeCategory? _incomeCategory = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id == 0)
+        {
+            _incomeCategory.Name = default;
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id != 0)
+        {
+            _title = "Edit";
+            _incomeCategory = await IncomeCategoriesService.Find(Id);
+        }
+    }
+
+    private async Task Save()
+    {
+        if (_incomeCategory?.Id > 0)
+        {
+            await IncomeCategoriesService.Update(_incomeCategory);
+        }
+        else if (_incomeCategory?.Id == null)
+        {
+            await IncomeCategoriesService.Add(_incomeCategory);
+        }
+        Cancel();
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/incomes/categories");
+    }
+}

@@ -1,0 +1,57 @@
+﻿@page "/expenses/categories"
+@using Finance.Core.Entities;
+@using Finance.UI.Interfaces;
+@inject IRequestApi<Expense> ExpensesService
+@inject IRequestApi<ExpenseCategory> ExpenseCategoriesService
+
+<PageTitle>Categories</PageTitle>
+
+<h1>Expense Categories</h1>
+
+@if (_expenseCategories == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col">
+            <a style="height:100%;width:100%" href='/expenses/categories/add' class="btn btn-success" role="button">Add</a>
+        </div>
+        <div class="col">
+            <a style="height:100%;width:100%" href='/expenses' class="btn btn-dark" role="button">Back</a>
+        </div>
+    </div>
+    <br />
+    <table class="table table-striped align-middle table-bordered">
+        <thead class="table-success">
+            <tr>
+                <th style="width:10%">Id</th>
+                <th style="width:80%">Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var expenseCategory in _expenseCategories)
+            {
+                <tr>
+                    <td>@expenseCategory.Id</td>
+                    <td>@expenseCategory.Name</td>
+                    <td>
+                        <a href='/expenses/categories/edit/@expenseCategory.Id' class="btn btn-warning" role="button">Edit</a>
+                        <a href='/expenses/categories/delete/@expenseCategory.Id' class="btn btn-danger" role="button">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code
+{
+    private ICollection<ExpenseCategory>? _expenseCategories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _expenseCategories = await ExpenseCategoriesService.GetAll();
+    }
+}

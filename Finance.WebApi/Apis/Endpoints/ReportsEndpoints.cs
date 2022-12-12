@@ -12,6 +12,10 @@ public static class ReportsEndpoints
                  .WithTags("Getters")
                  .WithOpenApi();
 
+        group.MapGet("/all", GetAllReport)
+                 .WithTags("Getters")
+                 .WithOpenApi();
+
         group.MapGet("/{date}", GetReport)
                  .WithTags("Getters")
                  .WithOpenApi();
@@ -43,4 +47,12 @@ public static class ReportsEndpoints
         ? Results.Ok(report)
         : Results.NotFound();
     }
+
+    private static async Task<IResult> GetAllReport(IReportService reportService)
+    {
+        return await reportService.GetAllReport() is Report report
+        ? Results.Ok(report)
+        : Results.NotFound();
+    }
 }
+

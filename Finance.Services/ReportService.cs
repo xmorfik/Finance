@@ -22,7 +22,7 @@ public class ReportService : IReportService
         var incomes = await _incomesRepository.ListAsync(new IncomesDailyReportSpecification(date));
         var expenses = await _expensesRepository.ListAsync(new ExpensesDailyReportSpecification(date));
 
-        if(incomes == null || expenses == null)
+        if (incomes == null || expenses == null)
         {
             throw new NotFoundException();
         }
@@ -32,8 +32,21 @@ public class ReportService : IReportService
 
     public async ValueTask<Report?> GetPeriodReport(DateOnly start, DateOnly end)
     {
-        var incomes = await _incomesRepository.ListAsync(new IncomePeriodReportSpecification(start,end));
-        var expenses = await _expensesRepository.ListAsync(new ExpensePeriodReportSpecification(start,end));
+        var incomes = await _incomesRepository.ListAsync(new IncomePeriodReportSpecification(start, end));
+        var expenses = await _expensesRepository.ListAsync(new ExpensePeriodReportSpecification(start, end));
+
+        if (incomes == null || expenses == null)
+        {
+            throw new NotFoundException();
+        }
+
+        return new Report(incomes, expenses);
+    }
+
+    public async ValueTask<Report?> GetAllReport()
+    {
+        var incomes = await _incomesRepository.ListAsync();
+        var expenses = await _expensesRepository.ListAsync();
 
         if (incomes == null || expenses == null)
         {

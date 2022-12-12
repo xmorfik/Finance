@@ -11,7 +11,7 @@ public class IncomePeriodReportSpecification : Specification<Income>
         var endDateTime = end.ToDateTime(TimeOnly.MinValue);
 
         Query.Where(
-            i => i.DateTime.Date.CompareTo(startDateTime) >= 0 
+            i => i.DateTime.Date.CompareTo(startDateTime) >= 0
             && i.DateTime.Date.CompareTo(endDateTime) <= 0);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Finance.WebApi.Apis;
 using Finance.WebApi.Filters;
 
-namespace Finance.WebApi.Configurations;
+namespace Finance.WebApi.Extentions;
 
 public static class ConfigureApiExtention
 {
